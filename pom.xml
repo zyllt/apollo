@@ -99,7 +99,7 @@
 		<module>apollo-configservice</module>
 		<module>apollo-adminservice</module>
 		<module>apollo-portal</module>
-		<module>apollo-assembly</module>
+		<!--<module>apollo-assembly</module>-->
 		<module>apollo-demo</module>
 	</modules>
 
