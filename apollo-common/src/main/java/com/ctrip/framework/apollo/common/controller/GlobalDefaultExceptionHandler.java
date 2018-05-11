@@ -98,7 +98,6 @@ public class GlobalDefaultExceptionHandler {
                 //ignore
             }
         }
-
         if (!errorHandled) {
             errorAttributes.put("status", status.value());
             errorAttributes.put("message", message);

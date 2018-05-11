@@ -20,7 +20,7 @@ META_SERVERS_OPTS="-Ddev_meta=$dev_meta -Dfat_meta=$fat_meta -Duat_meta=$uat_met
 
 # =============== Please do not modify the following content =============== #
 # go to script directory
-cd "${0%/*}"
+cd "${0%/*}"GlobalDefaultExceptionHandler.
 
 cd ..
 

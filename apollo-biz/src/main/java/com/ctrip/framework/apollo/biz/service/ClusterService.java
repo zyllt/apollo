@@ -32,7 +32,7 @@ public class ClusterService {
   public boolean isClusterNameUnique(String appId, String clusterName) {
     Objects.requireNonNull(appId, "AppId must not be null");
     Objects.requireNonNull(clusterName, "ClusterName must not be null");
-    return Objects.isNull(clusterRepository.findByAppIdAndName(appId, clusterName));
+    return clusterRepository.findByAppIdAndName(appId, clusterName) == null;
   }
 
   public Cluster findOne(String appId, String name) {

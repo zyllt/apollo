@@ -26,7 +26,7 @@ public class AppService {
 
   public boolean isAppIdUnique(String appId) {
     Objects.requireNonNull(appId, "AppId must not be null");
-    return Objects.isNull(appRepository.findByAppId(appId));
+    return appRepository.findByAppId(appId) == null;
   }
   
   @Transactional
