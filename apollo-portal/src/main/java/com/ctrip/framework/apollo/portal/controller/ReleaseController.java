@@ -42,7 +42,7 @@ public class ReleaseController {
                                   @PathVariable String env, @PathVariable String clusterName,
                                   @PathVariable String namespaceName, @RequestBody NamespaceReleaseModel model) {
 
-    checkModel(Objects.nonNull(model));
+    checkModel(model != null);
     model.setAppId(appId);
     model.setEnv(env);
     model.setClusterName(clusterName);
@@ -75,7 +75,7 @@ public class ReleaseController {
                                       @PathVariable String namespaceName, @PathVariable String branchName,
                                       @RequestBody NamespaceReleaseModel model) {
 
-    checkModel(Objects.nonNull(model));
+    checkModel(model != null);
     model.setAppId(appId);
     model.setEnv(env);
     model.setClusterName(branchName);
@@ -143,7 +143,7 @@ public class ReleaseController {
                        @PathVariable long releaseId) {
     releaseService.rollback(Env.valueOf(env), releaseId);
     ReleaseDTO release = releaseService.findReleaseById(Env.valueOf(env), releaseId);
-    if (Objects.isNull(release)) {
+    if (release == null) {
       return;
     }
 

@@ -33,14 +33,14 @@ public class ServerConfigController {
   @RequestMapping(value = "/server/config", method = RequestMethod.POST)
   public ServerConfig createOrUpdate(@RequestBody ServerConfig serverConfig) {
 
-    checkModel(Objects.nonNull(serverConfig));
+    checkModel(serverConfig != null);
     RequestPrecondition.checkArgumentsNotEmpty(serverConfig.getKey(), serverConfig.getValue());
 
     String modifiedBy = userInfoHolder.getUser().getUserId();
 
     ServerConfig storedConfig = serverConfigRepository.findByKey(serverConfig.getKey());
 
-    if (Objects.isNull(storedConfig)) {//create
+    if (storedConfig == null) {//create
       serverConfig.setDataChangeCreatedBy(modifiedBy);
       serverConfig.setDataChangeLastModifiedBy(modifiedBy);
       return serverConfigRepository.save(serverConfig);

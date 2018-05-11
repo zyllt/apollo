@@ -65,7 +65,7 @@ public class AppNamespaceService {
   public boolean isAppNamespaceNameUnique(String appId, String namespaceName) {
     Objects.requireNonNull(appId, "AppId must not be null");
     Objects.requireNonNull(namespaceName, "Namespace must not be null");
-    return Objects.isNull(appNamespaceRepository.findByAppIdAndName(appId, namespaceName));
+    return appNamespaceRepository.findByAppIdAndName(appId, namespaceName) == null;
   }
 
   @Transactional

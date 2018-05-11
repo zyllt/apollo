@@ -34,7 +34,7 @@ public class ClusterController {
   public ClusterDTO createCluster(@PathVariable String appId, @PathVariable String env,
                                   @RequestBody ClusterDTO cluster) {
 
-    checkModel(Objects.nonNull(cluster));
+    checkModel(cluster != null);
     RequestPrecondition.checkArgumentsNotEmpty(cluster.getAppId(), cluster.getName());
 
     if (!InputValidator.isValidClusterNamespace(cluster.getName())) {
