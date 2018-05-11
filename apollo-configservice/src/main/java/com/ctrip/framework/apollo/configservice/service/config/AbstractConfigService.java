@@ -7,7 +7,6 @@ import com.ctrip.framework.apollo.core.dto.ApolloNotificationMessages;
 
 import com.google.common.base.Strings;
 
-import java.util.Map;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +25,7 @@ public abstract class AbstractConfigService implements ConfigService {
       Release clusterRelease = findRelease(clientAppId, clientIp, configAppId, configClusterName, configNamespace,
           clientMessages);
 
-      if (!Objects.isNull(clusterRelease)) {
+      if (clusterRelease != null) {
         return clusterRelease;
       }
     }
@@ -35,7 +34,7 @@ public abstract class AbstractConfigService implements ConfigService {
     if (!Strings.isNullOrEmpty(dataCenter) && !Objects.equals(dataCenter, configClusterName)) {
       Release dataCenterRelease = findRelease(clientAppId, clientIp, configAppId, dataCenter, configNamespace,
           clientMessages);
-      if (!Objects.isNull(dataCenterRelease)) {
+      if (dataCenterRelease != null) {
         return dataCenterRelease;
       }
     }

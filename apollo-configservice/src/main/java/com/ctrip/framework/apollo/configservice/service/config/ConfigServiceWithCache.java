@@ -1,5 +1,6 @@
 package com.ctrip.framework.apollo.configservice.service.config;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
@@ -18,13 +19,12 @@ import com.ctrip.framework.apollo.core.dto.ApolloNotificationMessages;
 import com.ctrip.framework.apollo.tracer.Tracer;
 import com.ctrip.framework.apollo.tracer.spi.Transaction;
 
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+//import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
@@ -111,7 +111,7 @@ public class ConfigServiceWithCache extends AbstractConfigService {
 
               transaction.setStatus(Transaction.SUCCESS);
 
-              return Optional.ofNullable(release);
+              return Optional.fromNullable(release);
             } catch (Throwable ex) {
               transaction.setStatus(ex);
               throw ex;
@@ -125,7 +125,7 @@ public class ConfigServiceWithCache extends AbstractConfigService {
   @Override
   protected Release findActiveOne(long id, ApolloNotificationMessages clientMessages) {
     Tracer.logEvent(TRACER_EVENT_CACHE_GET_ID, String.valueOf(id));
-    return configIdCache.getUnchecked(id).orElse(null);
+    return configIdCache.getUnchecked(id).orNull();
   }
 
   @Override
