@@ -29,16 +29,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @PropertySource(value = {"classpath:configservice.properties"})
 @ComponentScan(basePackageClasses = {ApolloCommonConfig.class,
-    ApolloBizConfig.class,
-    ConfigServiceApplication.class,
-    ApolloMetaServiceConfig.class})
+        ApolloBizConfig.class,
+        ConfigServiceApplication.class,
+        ApolloMetaServiceConfig.class})
 public class ConfigServiceApplication {
 
-  public static void main(String[] args) throws Exception {
-    ConfigurableApplicationContext context =
-        new SpringApplicationBuilder(ConfigServiceApplication.class).run(args);
-    context.addApplicationListener(new ApplicationPidFileWriter());
-    context.addApplicationListener(new EmbeddedServerPortFileWriter());
-  }
+    public static void main(String[] args) throws Exception {
+        ConfigurableApplicationContext context =
+                new SpringApplicationBuilder(ConfigServiceApplication.class).run(args);
+        context.addApplicationListener(new ApplicationPidFileWriter());
+        context.addApplicationListener(new EmbeddedServerPortFileWriter());
+    }
 
 }

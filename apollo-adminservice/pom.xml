@@ -9,6 +9,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>apollo-adminservice</artifactId>
+	<packaging>war</packaging>
 	<name>Apollo AdminService</name>
 	<properties>
 		<github.path>${project.artifactId}</github.path>

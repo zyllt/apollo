@@ -9,6 +9,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>apollo-configservice</artifactId>
+	<packaging>war</packaging>
 	<name>Apollo ConfigService</name>
 	<properties>
 		<github.path>${project.artifactId}</github.path>
