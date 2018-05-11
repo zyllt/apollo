@@ -51,7 +51,7 @@ public class GrayPublishEmailBuilder extends ConfigPublishEmailBuilder {
     Object rules = context.get("rules");
     List<GrayReleaseRuleItemDTO>
             ruleItems = rules == null ?
-            null : gson.fromJson(rules.toString(), GsonType.RULE_ITEMS);
+            null : (List<GrayReleaseRuleItemDTO>) gson.fromJson(rules.toString(), GsonType.RULE_ITEMS);
 
 
     if (CollectionUtils.isEmpty(ruleItems)) {

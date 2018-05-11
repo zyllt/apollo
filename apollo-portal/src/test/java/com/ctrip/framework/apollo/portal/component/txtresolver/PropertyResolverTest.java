@@ -30,7 +30,7 @@ public class PropertyResolverTest extends AbstractUnitTest {
 
   @Test
   public void testAddItemBeforeNoItem() {
-    ItemChangeSets changeSets = resolver.resolve(1, "a=b\nb=c", Collections.emptyList());
+    ItemChangeSets changeSets = resolver.resolve(1, "a=b\nb=c", Collections.<ItemDTO>emptyList());
     Assert.assertEquals(2, changeSets.getCreateItems().size());
   }
 

@@ -31,7 +31,7 @@ public class PortalDBPropertySource extends RefreshablePropertySource {
   }
 
   public PortalDBPropertySource() {
-    super("DBConfig", Maps.newConcurrentMap());
+    super("DBConfig", Maps.<String, Object>newConcurrentMap());
   }
 
   @Override

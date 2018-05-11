@@ -23,7 +23,7 @@ public class DiscoveryService {
     if (application == null) {
       Tracer.logEvent("Apollo.EurekaDiscovery.NotFound", ServiceNameConsts.APOLLO_CONFIGSERVICE);
     }
-    return application != null ? application.getInstances() : Collections.emptyList();
+    return application != null ? application.getInstances() : Collections.<InstanceInfo>emptyList();
   }
 
   public List<InstanceInfo> getMetaServiceInstances() {
@@ -31,7 +31,7 @@ public class DiscoveryService {
     if (application == null) {
       Tracer.logEvent("Apollo.EurekaDiscovery.NotFound", ServiceNameConsts.APOLLO_METASERVICE);
     }
-    return application != null ? application.getInstances() : Collections.emptyList();
+    return application != null ? application.getInstances() : Collections.<InstanceInfo>emptyList();
   }
 
   public List<InstanceInfo> getAdminServiceInstances() {
@@ -39,6 +39,6 @@ public class DiscoveryService {
     if (application == null) {
       Tracer.logEvent("Apollo.EurekaDiscovery.NotFound", ServiceNameConsts.APOLLO_ADMINSERVICE);
     }
-    return application != null ? application.getInstances() : Collections.emptyList();
+    return application != null ? application.getInstances() : Collections.<InstanceInfo>emptyList();
   }
 }

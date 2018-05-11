@@ -64,9 +64,9 @@ public class ConfigFileController implements ReleaseMessageListener {
   private final ResponseEntity<String> NOT_FOUND_RESPONSE;
   private Cache<String, String> localCache;
   private final Multimap<String, String>
-      watchedKeys2CacheKey = Multimaps.synchronizedSetMultimap(HashMultimap.create());
+      watchedKeys2CacheKey = Multimaps.synchronizedSetMultimap(HashMultimap.<String, String>create());
   private final Multimap<String, String>
-      cacheKey2WatchedKeys = Multimaps.synchronizedSetMultimap(HashMultimap.create());
+      cacheKey2WatchedKeys = Multimaps.synchronizedSetMultimap(HashMultimap.<String, String>create());
   private static final Gson gson = new Gson();
 
   @Autowired

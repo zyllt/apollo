@@ -50,18 +50,32 @@ public class ReleaseKeyGeneratorTest {
     assertEquals(generateTimes * 2, releaseKeys.size());
   }
 
-  private Runnable generateReleaseKeysTask(Namespace namespace, Set<String> releaseKeys,
-                                   int generateTimes, CountDownLatch latch) {
-    return () -> {
-      try {
-        latch.await();
-      } catch (InterruptedException e) {
-        //ignore
-      }
-      for (int i = 0; i < generateTimes; i++) {
-        releaseKeys.add(ReleaseKeyGenerator.generateReleaseKey(namespace));
-      }
-    };
+  private Runnable generateReleaseKeysTask(final Namespace namespace, final Set<String> releaseKeys,
+                                           final int generateTimes, final CountDownLatch latch) {
+    return
+            new Runnable() {
+              @Override
+              public void run() {
+                try {
+                  latch.await();
+                } catch (InterruptedException e) {
+                  //ignore
+                }
+                for (int i = 0; i < generateTimes; i++) {
+                  releaseKeys.add(ReleaseKeyGenerator.generateReleaseKey(namespace));
+                }
+              }
+            };
+//            () -> {
+//      try {
+//        latch.await();
+//      } catch (InterruptedException e) {
+//        //ignore
+//      }
+//      for (int i = 0; i < generateTimes; i++) {
+//        releaseKeys.add(ReleaseKeyGenerator.generateReleaseKey(namespace));
+//      }
+//    };
   }
 
 }

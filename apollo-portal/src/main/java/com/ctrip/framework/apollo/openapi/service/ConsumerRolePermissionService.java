@@ -1,5 +1,6 @@
 package com.ctrip.framework.apollo.openapi.service;
 
+import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 
 import com.ctrip.framework.apollo.openapi.entity.ConsumerRole;
@@ -44,7 +45,13 @@ public class ConsumerRolePermissionService {
     }
 
     Set<Long> roleIds =
-        FluentIterable.from(consumerRoles).transform(consumerRole -> consumerRole.getRoleId())
+        FluentIterable.from(consumerRoles).transform(
+                new Function<ConsumerRole, Long>() {
+                  @Override
+                  public Long apply(ConsumerRole consumerRole) {
+                    return consumerRole.getRoleId();
+                  }
+                })
             .toSet();
     List<RolePermission> rolePermissions = rolePermissionRepository.findByRoleIdIn(roleIds);
     if (CollectionUtils.isEmpty(rolePermissions)) {

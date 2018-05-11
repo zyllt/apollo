@@ -61,8 +61,8 @@ public class GrayReleaseRulesHolder implements ReleaseMessageListener, Initializ
 
   public GrayReleaseRulesHolder() {
     loadVersion = new AtomicLong();
-    grayReleaseRuleCache = Multimaps.synchronizedSetMultimap(HashMultimap.create());
-    reversedGrayReleaseRuleCache = Multimaps.synchronizedSetMultimap(HashMultimap.create());
+    grayReleaseRuleCache = Multimaps.synchronizedMultimap(HashMultimap.<String,GrayReleaseRuleCache>create());
+    reversedGrayReleaseRuleCache = Multimaps.synchronizedSetMultimap(HashMultimap.<String, Long>create());
     executorService = Executors.newScheduledThreadPool(1, ApolloThreadFactory
         .create("GrayReleaseRulesHolder", true));
   }
@@ -72,7 +72,14 @@ public class GrayReleaseRulesHolder implements ReleaseMessageListener, Initializ
     populateDataBaseInterval();
     //force sync load for the first time
     periodicScanRules();
-    executorService.scheduleWithFixedDelay(this::periodicScanRules,
+    executorService.scheduleWithFixedDelay(
+            new Runnable() {
+              @Override
+              public void run() {
+                periodicScanRules();
+              }
+            },
+//    this::periodicScanRules,
         getDatabaseScanIntervalSecond(), getDatabaseScanIntervalSecond(), getDatabaseScanTimeUnit()
     );
   }

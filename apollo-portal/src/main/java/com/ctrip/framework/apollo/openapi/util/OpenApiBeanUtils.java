@@ -1,6 +1,8 @@
 package com.ctrip.framework.apollo.openapi.util;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -25,96 +27,112 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 public class OpenApiBeanUtils {
 
-  private static Gson gson = new Gson();
-  private static Type type = new TypeToken<Map<String, String>>() {
-  }.getType();
+    private static Gson gson = new Gson();
+    private static Type type = new TypeToken<Map<String, String>>() {
+    }.getType();
 
-  public static OpenItemDTO transformFromItemDTO(ItemDTO item) {
-    Preconditions.checkArgument(item != null);
-    return BeanUtils.transfrom(OpenItemDTO.class, item);
-  }
-
-  public static ItemDTO transformToItemDTO(OpenItemDTO openItemDTO) {
-    Preconditions.checkArgument(openItemDTO != null);
-    return BeanUtils.transfrom(ItemDTO.class, openItemDTO);
-  }
-
-  public static OpenAppNamespaceDTO transformToOpenAppNamespaceDTO(AppNamespace appNamespace) {
-    Preconditions.checkArgument(appNamespace != null);
-    return BeanUtils.transfrom(OpenAppNamespaceDTO.class, appNamespace);
-  }
-
-  public static AppNamespace transformToAppNamespace(OpenAppNamespaceDTO openAppNamespaceDTO) {
-    Preconditions.checkArgument(openAppNamespaceDTO != null);
-    return BeanUtils.transfrom(AppNamespace.class, openAppNamespaceDTO);
-  }
-
-  public static OpenReleaseDTO transformFromReleaseDTO(ReleaseDTO release) {
-    Preconditions.checkArgument(release != null);
-
-    OpenReleaseDTO openReleaseDTO = BeanUtils.transfrom(OpenReleaseDTO.class, release);
-
-    Map<String, String> configs = gson.fromJson(release.getConfigurations(), type);
-
-    openReleaseDTO.setConfigurations(configs);
-    return openReleaseDTO;
-  }
-
-  public static OpenNamespaceDTO transformFromNamespaceBO(NamespaceBO namespaceBO) {
-    Preconditions.checkArgument(namespaceBO != null);
-
-    OpenNamespaceDTO openNamespaceDTO = BeanUtils.transfrom(OpenNamespaceDTO.class, namespaceBO
-        .getBaseInfo());
-
-    //app namespace info
-    openNamespaceDTO.setFormat(namespaceBO.getFormat());
-    openNamespaceDTO.setComment(namespaceBO.getComment());
-    openNamespaceDTO.setPublic(namespaceBO.isPublic());
-
-    //items
-    List<OpenItemDTO> items = new LinkedList<>();
-    List<ItemBO> itemBOs = namespaceBO.getItems();
-    if (!CollectionUtils.isEmpty(itemBOs)) {
-      items.addAll(itemBOs.stream().map(itemBO -> transformFromItemDTO(itemBO.getItem())).collect
-          (Collectors.toList()));
-    }
-    openNamespaceDTO.setItems(items);
-    return openNamespaceDTO;
-
-  }
-
-  public static List<OpenNamespaceDTO> batchTransformFromNamespaceBOs(List<NamespaceBO>
-                                                                          namespaceBOs) {
-    if (CollectionUtils.isEmpty(namespaceBOs)) {
-      return Collections.emptyList();
+    public static OpenItemDTO transformFromItemDTO(ItemDTO item) {
+        Preconditions.checkArgument(item != null);
+        return BeanUtils.transfrom(OpenItemDTO.class, item);
     }
 
-    List<OpenNamespaceDTO> openNamespaceDTOs =
-        namespaceBOs.stream().map(OpenApiBeanUtils::transformFromNamespaceBO)
-            .collect(Collectors.toCollection(LinkedList::new));
-
-    return openNamespaceDTOs;
-  }
-
-  public static OpenNamespaceLockDTO transformFromNamespaceLockDTO(String namespaceName,
-                                                                   NamespaceLockDTO
-                                                                       namespaceLock) {
-    OpenNamespaceLockDTO lock = new OpenNamespaceLockDTO();
-
-    lock.setNamespaceName(namespaceName);
-
-    if (namespaceLock == null) {
-      lock.setLocked(false);
-    } else {
-      lock.setLocked(true);
-      lock.setLockedBy(namespaceLock.getDataChangeCreatedBy());
+    public static ItemDTO transformToItemDTO(OpenItemDTO openItemDTO) {
+        Preconditions.checkArgument(openItemDTO != null);
+        return BeanUtils.transfrom(ItemDTO.class, openItemDTO);
     }
 
-    return lock;
-  }
+    public static OpenAppNamespaceDTO transformToOpenAppNamespaceDTO(AppNamespace appNamespace) {
+        Preconditions.checkArgument(appNamespace != null);
+        return BeanUtils.transfrom(OpenAppNamespaceDTO.class, appNamespace);
+    }
+
+    public static AppNamespace transformToAppNamespace(OpenAppNamespaceDTO openAppNamespaceDTO) {
+        Preconditions.checkArgument(openAppNamespaceDTO != null);
+        return BeanUtils.transfrom(AppNamespace.class, openAppNamespaceDTO);
+    }
+
+    public static OpenReleaseDTO transformFromReleaseDTO(ReleaseDTO release) {
+        Preconditions.checkArgument(release != null);
+
+        OpenReleaseDTO openReleaseDTO = BeanUtils.transfrom(OpenReleaseDTO.class, release);
+
+        Map<String, String> configs = gson.fromJson(release.getConfigurations(), type);
+
+        openReleaseDTO.setConfigurations(configs);
+        return openReleaseDTO;
+    }
+
+    public static OpenNamespaceDTO transformFromNamespaceBO(NamespaceBO namespaceBO) {
+        Preconditions.checkArgument(namespaceBO != null);
+
+        OpenNamespaceDTO openNamespaceDTO = BeanUtils.transfrom(OpenNamespaceDTO.class, namespaceBO
+                .getBaseInfo());
+
+        //app namespace info
+        openNamespaceDTO.setFormat(namespaceBO.getFormat());
+        openNamespaceDTO.setComment(namespaceBO.getComment());
+        openNamespaceDTO.setPublic(namespaceBO.isPublic());
+
+        //items
+        List<OpenItemDTO> items = new LinkedList<>();
+        List<ItemBO> itemBOs = namespaceBO.getItems();
+        if (!CollectionUtils.isEmpty(itemBOs)) {
+
+            items.addAll(Lists.transform(itemBOs, new Function<ItemBO, OpenItemDTO>() {
+                @Override
+                public OpenItemDTO apply(ItemBO itemBO) {
+                    return transformFromItemDTO(itemBO.getItem());
+                }
+            }));
+//      items.addAll(itemBOs.stream().map(itemBO -> transformFromItemDTO(itemBO.getItem())).collect
+//          (Collectors.toList()));
+        }
+        openNamespaceDTO.setItems(items);
+        return openNamespaceDTO;
+
+    }
+
+    public static List<OpenNamespaceDTO> batchTransformFromNamespaceBOs(List<NamespaceBO>
+                                                                                namespaceBOs) {
+        if (CollectionUtils.isEmpty(namespaceBOs)) {
+            return Collections.emptyList();
+        }
+
+        List<OpenNamespaceDTO> openNamespaceDTOs =
+
+                Lists.transform(namespaceBOs, new Function<NamespaceBO, OpenNamespaceDTO>() {
+                    @Override
+                    public OpenNamespaceDTO apply(NamespaceBO namespaceBO) {
+                        return OpenApiBeanUtils.transformFromNamespaceBO(namespaceBO);
+                    }
+                });
+
+
+//                namespaceBOs.stream().map(OpenApiBeanUtils::transformFromNamespaceBO)
+//                        .collect(Collectors.toCollection(LinkedList::new));
+
+        return openNamespaceDTOs;
+    }
+
+    public static OpenNamespaceLockDTO transformFromNamespaceLockDTO(String namespaceName,
+                                                                     NamespaceLockDTO
+                                                                             namespaceLock) {
+        OpenNamespaceLockDTO lock = new OpenNamespaceLockDTO();
+
+        lock.setNamespaceName(namespaceName);
+
+        if (namespaceLock == null) {
+            lock.setLocked(false);
+        } else {
+            lock.setLocked(true);
+            lock.setLockedBy(namespaceLock.getDataChangeCreatedBy());
+        }
+
+        return lock;
+    }
 
 }

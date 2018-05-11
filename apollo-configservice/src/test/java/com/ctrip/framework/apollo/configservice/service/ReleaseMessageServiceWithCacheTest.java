@@ -63,7 +63,7 @@ public class ReleaseMessageServiceWithCacheTest {
   @Test
   public void testWhenNoReleaseMessages() throws Exception {
     when(releaseMessageRepository.findFirst500ByIdGreaterThanOrderByIdAsc(0L)).thenReturn
-        (Collections.emptyList());
+        (Collections.<ReleaseMessage>emptyList());
 
     releaseMessageServiceWithCache.afterPropertiesSet();
 

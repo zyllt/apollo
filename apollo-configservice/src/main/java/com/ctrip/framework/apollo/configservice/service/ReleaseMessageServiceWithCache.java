@@ -125,23 +125,26 @@ public class ReleaseMessageServiceWithCache implements ReleaseMessageListener, I
     //this should happen before ReleaseMessageScanner due to autowire
     loadReleaseMessages(0);
 
-    executorService.submit(() -> {
-      while (doScan.get() && !Thread.currentThread().isInterrupted()) {
-        Transaction transaction = Tracer.newTransaction("Apollo.ReleaseMessageServiceWithCache",
-            "scanNewReleaseMessages");
-        try {
-          loadReleaseMessages(maxIdScanned);
-          transaction.setStatus(Transaction.SUCCESS);
-        } catch (Throwable ex) {
-          transaction.setStatus(ex);
-          logger.error("Scan new release messages failed", ex);
-        } finally {
-          transaction.complete();
-        }
-        try {
-          scanIntervalTimeUnit.sleep(scanInterval);
-        } catch (InterruptedException e) {
-          //ignore
+    executorService.submit(new Runnable() {
+      @Override
+      public void run() {
+        while (doScan.get() && !Thread.currentThread().isInterrupted()) {
+          Transaction transaction = Tracer.newTransaction("Apollo.ReleaseMessageServiceWithCache",
+                  "scanNewReleaseMessages");
+          try {
+            loadReleaseMessages(maxIdScanned);
+            transaction.setStatus(Transaction.SUCCESS);
+          } catch (Throwable ex) {
+            transaction.setStatus(ex);
+            logger.error("Scan new release messages failed", ex);
+          } finally {
+            transaction.complete();
+          }
+          try {
+            scanIntervalTimeUnit.sleep(scanInterval);
+          } catch (InterruptedException e) {
+            //ignore
+          }
         }
       }
     });
@@ -164,7 +167,10 @@ public class ReleaseMessageServiceWithCache implements ReleaseMessageListener, I
       if (CollectionUtils.isEmpty(releaseMessages)) {
         break;
       }
-      releaseMessages.forEach(this::mergeReleaseMessage);
+      for (ReleaseMessage releaseMessage : releaseMessages) {
+        mergeReleaseMessage(releaseMessage);
+      }
+//      releaseMessages.forEach(this::mergeReleaseMessage);
       int scanned = releaseMessages.size();
       startId = releaseMessages.get(scanned - 1).getId();
       hasMore = scanned == 500;

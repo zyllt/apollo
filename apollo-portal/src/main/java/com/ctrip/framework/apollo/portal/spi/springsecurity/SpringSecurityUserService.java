@@ -20,7 +20,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -75,7 +74,22 @@ public class SpringSecurityUserService implements UserService {
       return result;
     }
 
-    result.addAll(users.stream().map(UserPO::toUserInfo).collect(Collectors.toList()));
+    result.addAll(Lists.transform(users, new com.google.common.base.Function<UserPO, UserInfo>() {
+      @Override
+      public UserInfo apply(UserPO userPO) {
+        return userPO.toUserInfo();
+      }
+    }));
+
+//
+//    result.addAll(users.stream()
+//            .map(new Function<UserPO, UserInfo>() {
+//              @Override
+//              public UserInfo apply(UserPO userPO) {
+//                return userPO.toUserInfo();
+//              }
+//            }).collect(Collectors.toList()));
+//            .map(UserPO::toUserInfo).collect(Collectors.toList()));
 
     return result;
   }

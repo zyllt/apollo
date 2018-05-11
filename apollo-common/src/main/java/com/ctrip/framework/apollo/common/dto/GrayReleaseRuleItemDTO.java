@@ -16,7 +16,7 @@ public class GrayReleaseRuleItemDTO {
   private Set<String> clientIpList;
 
   public GrayReleaseRuleItemDTO(String clientAppId) {
-    this(clientAppId, Sets.newHashSet());
+    this(clientAppId, Sets.<String>newHashSet());
   }
 
   public GrayReleaseRuleItemDTO(String clientAppId, Set<String> clientIpList) {

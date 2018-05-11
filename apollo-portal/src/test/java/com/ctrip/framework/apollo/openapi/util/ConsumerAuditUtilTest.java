@@ -63,7 +63,7 @@ public class ConsumerAuditUtilTest {
     when(request.getQueryString()).thenReturn(someQuery);
     when(request.getMethod()).thenReturn(someMethod);
 
-    SettableFuture<List<ConsumerAudit>> result = SettableFuture.create();
+    final SettableFuture<List<ConsumerAudit>> result = SettableFuture.create();
 
     doAnswer(new Answer<Void>() {
       @Override

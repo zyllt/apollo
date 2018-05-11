@@ -11,6 +11,7 @@ import com.ctrip.framework.apollo.portal.repository.RolePermissionRepository;
 import com.ctrip.framework.apollo.portal.repository.RoleRepository;
 import com.ctrip.framework.apollo.portal.repository.UserRoleRepository;
 import com.ctrip.framework.apollo.portal.service.RolePermissionService;
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashMultimap;
@@ -46,18 +47,30 @@ public class DefaultRolePermissionService implements RolePermissionService {
         Role current = findRoleByRoleName(role.getRoleName());
         Preconditions.checkState(current == null, "Role %s already exists!", role.getRoleName());
 
-        Role createdRole = roleRepository.save(role);
+        final Role createdRole = roleRepository.save(role);
 
         if (!CollectionUtils.isEmpty(permissionIds)) {
-            Iterable<RolePermission> rolePermissions = FluentIterable.from(permissionIds).transform(
-                    permissionId -> {
-                        RolePermission rolePermission = new RolePermission();
-                        rolePermission.setRoleId(createdRole.getId());
-                        rolePermission.setPermissionId(permissionId);
-                        rolePermission.setDataChangeCreatedBy(createdRole.getDataChangeCreatedBy());
-                        rolePermission.setDataChangeLastModifiedBy(createdRole.getDataChangeLastModifiedBy());
-                        return rolePermission;
+            Iterable<RolePermission> rolePermissions = FluentIterable.from(permissionIds)
+                    .transform(new Function<Long, RolePermission>() {
+                        @Override
+                        public RolePermission apply(Long permissionId) {
+                            RolePermission rolePermission = new RolePermission();
+                            rolePermission.setRoleId(createdRole.getId());
+                            rolePermission.setPermissionId(permissionId);
+                            rolePermission.setDataChangeCreatedBy(createdRole.getDataChangeCreatedBy());
+                            rolePermission.setDataChangeLastModifiedBy(createdRole.getDataChangeLastModifiedBy());
+                            return rolePermission;
+                        }
                     });
+//                    .transform(
+//                    permissionId -> {
+//                        RolePermission rolePermission = new RolePermission();
+//                        rolePermission.setRoleId(createdRole.getId());
+//                        rolePermission.setPermissionId(permissionId);
+//                        rolePermission.setDataChangeCreatedBy(createdRole.getDataChangeCreatedBy());
+//                        rolePermission.setDataChangeLastModifiedBy(createdRole.getDataChangeLastModifiedBy());
+//                        return rolePermission;
+//                    });
             rolePermissionRepository.save(rolePermissions);
         }
 
@@ -71,25 +84,44 @@ public class DefaultRolePermissionService implements RolePermissionService {
      */
     @Transactional
     public Set<String> assignRoleToUsers(String roleName, Set<String> userIds,
-                                         String operatorUserId) {
-        Role role = findRoleByRoleName(roleName);
+                                         final String operatorUserId) {
+        final Role role = findRoleByRoleName(roleName);
         Preconditions.checkState(role != null, "Role %s doesn't exist!", roleName);
 
         List<UserRole> existedUserRoles =
                 userRoleRepository.findByUserIdInAndRoleId(userIds, role.getId());
         Set<String> existedUserIds =
-                FluentIterable.from(existedUserRoles).transform(userRole -> userRole.getUserId()).toSet();
+                FluentIterable.from(existedUserRoles)
+                        .transform(new Function<UserRole, String>() {
+                            @Override
+                            public String apply(UserRole userRole) {
+                                return userRole.getUserId();
+                            }
+                        }).toSet();
+//                        .transform(userRole -> userRole.getUserId()).toSet();
 
         Set<String> toAssignUserIds = Sets.difference(userIds, existedUserIds);
 
-        Iterable<UserRole> toCreate = FluentIterable.from(toAssignUserIds).transform(userId -> {
-            UserRole userRole = new UserRole();
-            userRole.setRoleId(role.getId());
-            userRole.setUserId(userId);
-            userRole.setDataChangeCreatedBy(operatorUserId);
-            userRole.setDataChangeLastModifiedBy(operatorUserId);
-            return userRole;
-        });
+        Iterable<UserRole> toCreate = FluentIterable.from(toAssignUserIds)
+                .transform(new Function<String, UserRole>() {
+                    @Override
+                    public UserRole apply(String userId) {
+                        UserRole userRole = new UserRole();
+                        userRole.setRoleId(role.getId());
+                        userRole.setUserId(userId);
+                        userRole.setDataChangeCreatedBy(operatorUserId);
+                        userRole.setDataChangeLastModifiedBy(operatorUserId);
+                        return userRole;
+                    }
+                });
+//                .transform(userId -> {
+//            UserRole userRole = new UserRole();
+//            userRole.setRoleId(role.getId());
+//            userRole.setUserId(userId);
+//            userRole.setDataChangeCreatedBy(operatorUserId);
+//            userRole.setDataChangeLastModifiedBy(operatorUserId);
+//            return userRole;
+//        });
 
         userRoleRepository.save(toCreate);
         return toAssignUserIds;
@@ -127,11 +159,22 @@ public class DefaultRolePermissionService implements RolePermissionService {
 
         List<UserRole> userRoles = userRoleRepository.findByRoleId(role.getId());
 
-        Set<UserInfo> users = FluentIterable.from(userRoles).transform(userRole -> {
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserId(userRole.getUserId());
-            return userInfo;
-        }).toSet();
+        Set<UserInfo> users = FluentIterable.from(userRoles)
+                .transform(new Function<UserRole, UserInfo>() {
+
+                    @Override
+                    public UserInfo apply(UserRole userRole) {
+                        UserInfo userInfo = new UserInfo();
+                        userInfo.setUserId(userRole.getUserId());
+                        return userInfo;
+                    }
+                })
+//                .transform(userRole -> {
+//            UserInfo userInfo = new UserInfo();
+//            userInfo.setUserId(userRole.getUserId());
+//            return userInfo;
+//        })
+                .toSet();
 
         return users;
     }
@@ -163,7 +206,14 @@ public class DefaultRolePermissionService implements RolePermissionService {
         }
 
         Set<Long> roleIds =
-                FluentIterable.from(userRoles).transform(userRole -> userRole.getRoleId()).toSet();
+                FluentIterable.from(userRoles)
+                        .transform(new Function<UserRole, Long>() {
+                            @Override
+                            public Long apply(UserRole userRole) {
+                                return userRole.getRoleId();
+                            }
+                        }).toSet();
+//                        .transform(userRole -> userRole.getRoleId()).toSet();
         List<RolePermission> rolePermissions = rolePermissionRepository.findByRoleIdIn(roleIds);
         if (CollectionUtils.isEmpty(rolePermissions)) {
             return false;

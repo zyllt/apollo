@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -104,15 +105,27 @@ public class ItemController {
 
     List<ItemDTO> items = configService.findItems(appId, Env.valueOf(env), clusterName, namespaceName);
     if ("lastModifiedTime".equals(orderBy)) {
-      Collections.sort(items, (o1, o2) -> {
-        if (o1.getDataChangeLastModifiedTime().after(o2.getDataChangeLastModifiedTime())) {
-          return -1;
+      Collections.sort(items, new Comparator<ItemDTO>() {
+        @Override
+        public int compare(ItemDTO o1, ItemDTO o2) {
+          if (o1.getDataChangeLastModifiedTime().after(o2.getDataChangeLastModifiedTime())) {
+            return -1;
+          }
+          if (o1.getDataChangeLastModifiedTime().before(o2.getDataChangeLastModifiedTime())) {
+            return 1;
+          }
+          return 0;
         }
-        if (o1.getDataChangeLastModifiedTime().before(o2.getDataChangeLastModifiedTime())) {
-          return 1;
-        }
-        return 0;
       });
+//      Collections.sort(items, (o1, o2) -> {
+//        if (o1.getDataChangeLastModifiedTime().after(o2.getDataChangeLastModifiedTime())) {
+//          return -1;
+//        }
+//        if (o1.getDataChangeLastModifiedTime().before(o2.getDataChangeLastModifiedTime())) {
+//          return 1;
+//        }
+//        return 0;
+//      });
     }
     return items;
   }
@@ -129,7 +142,7 @@ public class ItemController {
   @RequestMapping(value = "/namespaces/{namespaceName}/diff", method = RequestMethod.POST, consumes = {
       "application/json"})
   public List<ItemDiffs> diff(@RequestBody NamespaceSyncModel model) {
-    checkModel(Objects.nonNull(model) && !model.isInvalid());
+    checkModel(model != null && !model.isInvalid());
 
     return configService.compare(model.getSyncToNamespaces(), model.getSyncItems());
   }
@@ -139,14 +152,14 @@ public class ItemController {
       "application/json"})
   public ResponseEntity<Void> update(@PathVariable String appId, @PathVariable String namespaceName,
                                      @RequestBody NamespaceSyncModel model) {
-    checkModel(Objects.nonNull(model) && !model.isInvalid());
+    checkModel(model != null && !model.isInvalid());
 
     configService.syncItems(model.getSyncToNamespaces(), model.getSyncItems());
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 
   private boolean isValidItem(ItemDTO item) {
-    return Objects.nonNull(item) && !StringUtils.isContainEmpty(item.getKey());
+    return item != null && !StringUtils.isContainEmpty(item.getKey());
   }
 
 

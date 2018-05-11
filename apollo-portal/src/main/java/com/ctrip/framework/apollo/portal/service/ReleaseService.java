@@ -1,6 +1,7 @@
 package com.ctrip.framework.apollo.portal.service;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 
 import com.ctrip.framework.apollo.common.constants.GsonType;
@@ -141,11 +142,11 @@ public class ReleaseService {
   }
 
   public ReleaseCompareResult compare(ReleaseDTO baseRelease, ReleaseDTO toCompareRelease) {
-    Map<String, String> baseReleaseConfiguration = baseRelease == null ? new HashMap<>() :
-                                                   gson.fromJson(baseRelease.getConfigurations(), GsonType.CONFIG);
-    Map<String, String> toCompareReleaseConfiguration = toCompareRelease == null ? new HashMap<>() :
-                                                        gson.fromJson(toCompareRelease.getConfigurations(),
-                                                                      GsonType.CONFIG);
+    Map<String, String> baseReleaseConfiguration = baseRelease == null ? new HashMap<String,String>() :
+            (Map<String, String>) gson.fromJson(baseRelease.getConfigurations(), GsonType.CONFIG);
+    Map<String, String> toCompareReleaseConfiguration = toCompareRelease == null ? new HashMap<String,String>() :
+            (Map<String, String>) gson.fromJson(toCompareRelease.getConfigurations(),
+                    GsonType.CONFIG);
 
     ReleaseCompareResult compareResult = new ReleaseCompareResult();
 

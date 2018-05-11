@@ -1,11 +1,9 @@
 package com.ctrip.framework.apollo.adminservice.controller;
 
+import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 
 import com.ctrip.framework.apollo.biz.entity.Instance;
 import com.ctrip.framework.apollo.biz.entity.InstanceConfig;
@@ -29,12 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
+//import java.util.stream.Collectors;
 
 /**
  * @author Jason Song(song_s@ctrip.com)
@@ -80,15 +74,30 @@ public class InstanceConfigController {
 
       for (InstanceDTO instanceDTO : instanceDTOs) {
         Collection<InstanceConfig> configs = instanceConfigMap.get(instanceDTO.getId());
-        List<InstanceConfigDTO> configDTOs = configs.stream().map(instanceConfig -> {
-          InstanceConfigDTO instanceConfigDTO = new InstanceConfigDTO();
-          //to save some space
-          instanceConfigDTO.setRelease(null);
-          instanceConfigDTO.setReleaseDeliveryTime(instanceConfig.getReleaseDeliveryTime());
-          instanceConfigDTO.setDataChangeLastModifiedTime(instanceConfig
-              .getDataChangeLastModifiedTime());
-          return instanceConfigDTO;
-        }).collect(Collectors.toList());
+        List<InstanceConfigDTO> configDTOs =
+                new ArrayList<>(FluentIterable.from(configs).transform(new Function<InstanceConfig, InstanceConfigDTO>() {
+                  @Override
+                  public InstanceConfigDTO apply( InstanceConfig instanceConfig) {
+
+                    InstanceConfigDTO instanceConfigDTO = new InstanceConfigDTO();
+                    //to save some space
+                    instanceConfigDTO.setRelease(null);
+                    instanceConfigDTO.setReleaseDeliveryTime(instanceConfig.getReleaseDeliveryTime());
+                    instanceConfigDTO.setDataChangeLastModifiedTime(instanceConfig
+                            .getDataChangeLastModifiedTime());
+                    return instanceConfigDTO;
+                  }
+                }).toList());
+//
+//                configs.stream().map(instanceConfig -> {
+//          InstanceConfigDTO instanceConfigDTO = new InstanceConfigDTO();
+//          //to save some space
+//          instanceConfigDTO.setRelease(null);
+//          instanceConfigDTO.setReleaseDeliveryTime(instanceConfig.getReleaseDeliveryTime());
+//          instanceConfigDTO.setDataChangeLastModifiedTime(instanceConfig
+//              .getDataChangeLastModifiedTime());
+//          return instanceConfigDTO;
+//        }).collect(Collectors.toList());
         instanceDTO.setConfigs(configDTOs);
       }
     }
@@ -101,8 +110,15 @@ public class InstanceConfigController {
                                               @RequestParam("clusterName") String clusterName,
                                               @RequestParam("namespaceName") String namespaceName,
                                               @RequestParam("releaseIds") String releaseIds) {
-    Set<Long> releaseIdSet = RELEASES_SPLITTER.splitToList(releaseIds).stream().map(Long::parseLong)
-        .collect(Collectors.toSet());
+    Set<Long> releaseIdSet =
+            FluentIterable.from(RELEASES_SPLITTER.splitToList(releaseIds)).transform(new Function<String, Long>() {
+              @Override
+              public Long apply( String s) {
+                return Long.parseLong(s);
+              }
+            }).toSet();
+//            RELEASES_SPLITTER.splitToList(releaseIds).stream().map(Long::parseLong)
+//        .collect(Collectors.toSet());
 
     List<Release> releases = releaseService.findByReleaseIds(releaseIdSet);
 
@@ -110,8 +126,17 @@ public class InstanceConfigController {
       throw new NotFoundException(String.format("releases not found for %s", releaseIds));
     }
 
-    Set<String> releaseKeys = releases.stream().map(Release::getReleaseKey).collect(Collectors
-        .toSet());
+    Set<String> releaseKeys =
+
+            FluentIterable.from(releases).transform(new Function<Release, String>() {
+              @Override
+              public String apply(Release release) {
+                return release.getReleaseKey();
+              }
+            }).toSet();
+//
+//            releases.stream().map(Release::getReleaseKey).collect(Collectors
+//        .toSet());
 
     List<InstanceConfig> instanceConfigs = instanceService
         .findInstanceConfigsByNamespaceWithReleaseKeysNotIn(appId, clusterName, namespaceName,
@@ -134,7 +159,7 @@ public class InstanceConfigController {
     List<InstanceDTO> instanceDTOs = BeanUtils.batchTransform(InstanceDTO.class, instances);
 
     List<Release> otherReleases = releaseService.findByReleaseKeys(otherReleaseKeys);
-    Map<String, ReleaseDTO> releaseMap = Maps.newHashMap();
+    final Map<String, ReleaseDTO> releaseMap = Maps.newHashMap();
 
     for (Release release : otherReleases) {
       //unset configurations to save space
@@ -145,14 +170,27 @@ public class InstanceConfigController {
 
     for (InstanceDTO instanceDTO : instanceDTOs) {
       Collection<InstanceConfig> configs = instanceConfigMap.get(instanceDTO.getId());
-      List<InstanceConfigDTO> configDTOs = configs.stream().map(instanceConfig -> {
-        InstanceConfigDTO instanceConfigDTO = new InstanceConfigDTO();
-        instanceConfigDTO.setRelease(releaseMap.get(instanceConfig.getReleaseKey()));
-        instanceConfigDTO.setReleaseDeliveryTime(instanceConfig.getReleaseDeliveryTime());
-        instanceConfigDTO.setDataChangeLastModifiedTime(instanceConfig
-            .getDataChangeLastModifiedTime());
-        return instanceConfigDTO;
-      }).collect(Collectors.toList());
+      List<InstanceConfigDTO> configDTOs =
+              new ArrayList<>(FluentIterable.from(configs).transform(new Function<InstanceConfig, InstanceConfigDTO>() {
+                @Override
+                public InstanceConfigDTO apply(InstanceConfig instanceConfig) {
+                  InstanceConfigDTO instanceConfigDTO = new InstanceConfigDTO();
+                  instanceConfigDTO.setRelease(releaseMap.get(instanceConfig.getReleaseKey()));
+                  instanceConfigDTO.setReleaseDeliveryTime(instanceConfig.getReleaseDeliveryTime());
+                  instanceConfigDTO.setDataChangeLastModifiedTime(instanceConfig
+                          .getDataChangeLastModifiedTime());
+                  return instanceConfigDTO;
+                }
+              }).toList());
+//
+//              configs.stream().map(instanceConfig -> {
+//        InstanceConfigDTO instanceConfigDTO = new InstanceConfigDTO();
+//        instanceConfigDTO.setRelease(releaseMap.get(instanceConfig.getReleaseKey()));
+//        instanceConfigDTO.setReleaseDeliveryTime(instanceConfig.getReleaseDeliveryTime());
+//        instanceConfigDTO.setDataChangeLastModifiedTime(instanceConfig
+//            .getDataChangeLastModifiedTime());
+//        return instanceConfigDTO;
+//      }).collect(Collectors.toList());
       instanceDTO.setConfigs(configDTOs);
     }
 

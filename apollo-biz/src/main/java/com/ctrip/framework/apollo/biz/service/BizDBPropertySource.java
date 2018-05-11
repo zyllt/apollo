@@ -33,7 +33,7 @@ public class BizDBPropertySource extends RefreshablePropertySource {
   }
 
   public BizDBPropertySource() {
-    super("DBConfig", Maps.newConcurrentMap());
+    super("DBConfig", Maps.<String, Object>newConcurrentMap());
   }
 
   String getCurrentDataCenter() {

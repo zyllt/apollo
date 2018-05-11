@@ -1,5 +1,6 @@
 package com.ctrip.framework.apollo.configservice.util;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
@@ -137,6 +138,11 @@ public class WatchKeysUtil {
       return Collections.emptySet();
     }
 
-    return FluentIterable.from(appNamespaces).transform(AppNamespace::getName).toSet();
+    return FluentIterable.from(appNamespaces).transform(new Function<AppNamespace, String>() {
+      @Override
+      public String apply( AppNamespace appNamespace) {
+        return appNamespace.getName();
+      }
+    }).toSet();
   }
 }

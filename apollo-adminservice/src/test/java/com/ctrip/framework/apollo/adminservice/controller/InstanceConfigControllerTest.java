@@ -308,7 +308,7 @@ public class InstanceConfigControllerTest {
     String someClusterName = "someClusterName";
     String someNamespaceName = "someNamespaceName";
 
-    Page<Instance> instances = new PageImpl<>(Collections.emptyList(), pageable, 2);
+    Page<Instance> instances = new PageImpl<>(Collections.<Instance>emptyList(), pageable, 2);
 
     when(instanceService.findInstancesByNamespace(eq(someAppId), eq(someClusterName),
         eq(someNamespaceName), any(Pageable.class))).thenReturn(instances);

@@ -1,5 +1,7 @@
 package com.ctrip.framework.apollo.biz.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -18,7 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -70,7 +72,14 @@ public class InstanceServiceTest extends AbstractIntegrationTest {
     List<Instance> instances = instanceService.findInstancesByIds(Sets.newHashSet(someInstance
         .getId(), anotherInstance.getId()));
 
-    Set<String> ips = instances.stream().map(Instance::getIp).collect(Collectors.toSet());
+    Set<String> ips =
+            FluentIterable.from(instances).transform(new Function<Instance, String>() {
+              @Override
+              public String apply(Instance instance) {
+                return instance.getIp();
+              }
+            }).toSet();
+//            instances.stream().map(Instance::getIp).collect(Collectors.toSet());
     assertEquals(2, instances.size());
     assertEquals(Sets.newHashSet(someIp, anotherIp), ips);
   }

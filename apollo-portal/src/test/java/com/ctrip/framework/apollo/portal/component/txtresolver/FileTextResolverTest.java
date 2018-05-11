@@ -22,7 +22,7 @@ public class FileTextResolverTest extends AbstractUnitTest {
 
   @Test
   public void testCreateItem(){
-    ItemChangeSets changeSets = resolver.resolve(NAMESPACE, CONFIG_TEXT, Collections.emptyList());
+    ItemChangeSets changeSets = resolver.resolve(NAMESPACE, CONFIG_TEXT, Collections.<ItemDTO>emptyList());
 
     Assert.assertEquals(1, changeSets.getCreateItems().size());
     Assert.assertEquals(0, changeSets.getUpdateItems().size());

@@ -1,5 +1,7 @@
 package com.ctrip.framework.apollo.biz.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 
@@ -33,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 @Service
 public class NamespaceService {
@@ -189,7 +191,15 @@ public class NamespaceService {
       return null;
     }
 
-    Set<String> childClusterNames = childClusters.stream().map(Cluster::getName).collect(Collectors.toSet());
+    Set<String> childClusterNames =
+            FluentIterable.from(childClusters).transform(new Function<Cluster, String>() {
+              @Override
+              public String apply(Cluster cluster) {
+                return cluster.getName();
+              }
+            }).toSet();
+
+//            childClusters.stream().map(Cluster::getName).collect(Collectors.toSet());
     //the child namespace is the intersection of the child clusters and child namespaces
     for (Namespace namespace : namespaces) {
       if (childClusterNames.contains(namespace.getClusterName())) {
@@ -238,8 +248,10 @@ public class NamespaceService {
     Objects.requireNonNull(appId, "AppId must not be null");
     Objects.requireNonNull(cluster, "Cluster must not be null");
     Objects.requireNonNull(namespace, "Namespace must not be null");
-    return Objects.isNull(
-        namespaceRepository.findByAppIdAndClusterNameAndNamespaceName(appId, cluster, namespace));
+    return
+//            Objects.isNull(
+        namespaceRepository.findByAppIdAndClusterNameAndNamespaceName(appId, cluster, namespace) == null;
+//    );
   }
 
   @Transactional
@@ -361,8 +373,10 @@ public class NamespaceService {
           break;
         }
       }
-
-      clusterHasNotPublishedItems.putIfAbsent(clusterName, false);
+      if(clusterHasNotPublishedItems.get(clusterName) == null){
+        clusterHasNotPublishedItems.put(clusterName,false);
+      }
+//      clusterHasNotPublishedItems.putIfAbsent(clusterName, false);
     }
 
     return clusterHasNotPublishedItems;

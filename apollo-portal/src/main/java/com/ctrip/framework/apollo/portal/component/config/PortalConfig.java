@@ -34,7 +34,7 @@ public class PortalConfig extends RefreshableConfig {
 
   @Override
   public List<RefreshablePropertySource> getRefreshablePropertySources() {
-    return Collections.singletonList(portalDBPropertySource);
+    return Collections.singletonList((RefreshablePropertySource)portalDBPropertySource);
   }
 
   /***
@@ -88,7 +88,8 @@ public class PortalConfig extends RefreshableConfig {
   public List<Organization> organizations() {
 
     String organizations = getValue("organizations");
-    return organizations == null ? Collections.emptyList() : gson.fromJson(organizations, ORGANIZATION);
+    return organizations == null ? Collections.<Organization>emptyList() :
+            (List<Organization>)gson.fromJson(organizations, ORGANIZATION);
   }
 
   public String portalAddress() {

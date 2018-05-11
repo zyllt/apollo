@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
@@ -65,7 +66,7 @@ public class NamespacePublishInfoTest extends AbstractUnitTest {
     when(namespaceRepository.findByAppIdAndClusterNameOrderByIdAsc(testApp, ConfigConsts.CLUSTER_NAME_DEFAULT))
         .thenReturn(Collections.singletonList(namespace));
     when(releaseService.findLatestActiveRelease(namespace)).thenReturn(release);
-    when(itemService.findItemsModifiedAfterDate(anyLong(), anyObject())).thenReturn(Collections.singletonList(item));
+    when(itemService.findItemsModifiedAfterDate(anyLong(), (Date) anyObject())).thenReturn(Collections.singletonList(item));
 
     Map<String, Boolean> result = namespaceService.namespacePublishInfo(testApp);
 
@@ -85,7 +86,7 @@ public class NamespacePublishInfoTest extends AbstractUnitTest {
     when(namespaceRepository.findByAppIdAndClusterNameOrderByIdAsc(testApp, ConfigConsts.CLUSTER_NAME_DEFAULT))
         .thenReturn(Collections.singletonList(namespace));
     when(releaseService.findLatestActiveRelease(namespace)).thenReturn(release);
-    when(itemService.findItemsModifiedAfterDate(anyLong(), anyObject())).thenReturn(Collections.singletonList(item));
+    when(itemService.findItemsModifiedAfterDate(anyLong(), (Date) anyObject())).thenReturn(Collections.singletonList(item));
 
     Map<String, Boolean> result = namespaceService.namespacePublishInfo(testApp);
 

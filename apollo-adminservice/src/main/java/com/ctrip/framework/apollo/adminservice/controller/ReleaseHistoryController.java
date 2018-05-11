@@ -89,7 +89,7 @@ public class ReleaseHistoryController {
   private ReleaseHistoryDTO transformReleaseHistory2DTO(ReleaseHistory releaseHistory) {
     ReleaseHistoryDTO dto = new ReleaseHistoryDTO();
     BeanUtils.copyProperties(releaseHistory, dto, "operationContext");
-    dto.setOperationContext(gson.fromJson(releaseHistory.getOperationContext(),
+    dto.setOperationContext((Map<String, Object>) gson.fromJson(releaseHistory.getOperationContext(),
                                           configurationTypeReference));
 
     return dto;

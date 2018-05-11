@@ -114,7 +114,7 @@ public class NamespaceBranchService {
 
     ItemChangeSets changeSets = itemsComparator.compareIgnoreBlankAndCommentItem(parentNamespace.getBaseInfo().getId(),
                                                                                  masterItems, branchItems);
-    changeSets.setDeleteItems(Collections.emptyList());
+    changeSets.setDeleteItems(Collections.<ItemDTO>emptyList());
     changeSets.setDataChangeLastModifiedBy(userInfoHolder.getUser().getUserId());
     return changeSets;
   }

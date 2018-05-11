@@ -1,6 +1,7 @@
 package com.ctrip.framework.apollo.adminservice.controller;
 
 
+import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 
 import com.ctrip.framework.apollo.biz.entity.Namespace;
@@ -17,6 +18,7 @@ import com.ctrip.framework.apollo.common.dto.ReleaseDTO;
 import com.ctrip.framework.apollo.common.exception.NotFoundException;
 import com.ctrip.framework.apollo.common.utils.BeanUtils;
 
+import com.google.common.collect.FluentIterable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 @RestController
 public class ReleaseController {
@@ -59,8 +61,16 @@ public class ReleaseController {
 
   @RequestMapping(value = "/releases", method = RequestMethod.GET)
   public List<ReleaseDTO> findReleaseByIds(@RequestParam("releaseIds") String releaseIds) {
-    Set<Long> releaseIdSet = RELEASES_SPLITTER.splitToList(releaseIds).stream().map(Long::parseLong)
-        .collect(Collectors.toSet());
+    Set<Long> releaseIdSet =
+            FluentIterable.from(RELEASES_SPLITTER.splitToList(releaseIds)).transform(new Function<String, Long>() {
+              @Override
+              public Long apply(String s) {
+                return Long.parseLong(s);
+              }
+            }).toSet();
+
+//            RELEASES_SPLITTER.splitToList(releaseIds).stream().map(Long::parseLong)
+//        .collect(Collectors.toSet());
 
     List<Release> releases = releaseService.findByReleaseIds(releaseIdSet);
 

@@ -43,18 +43,23 @@ public class ReleaseMessageScanner implements InitializingBean {
   public void afterPropertiesSet() throws Exception {
     databaseScanInterval = bizConfig.releaseMessageScanIntervalInMilli();
     maxIdScanned = loadLargestMessageId();
-    executorService.scheduleWithFixedDelay((Runnable) () -> {
-      Transaction transaction = Tracer.newTransaction("Apollo.ReleaseMessageScanner", "scanMessage");
-      try {
-        scanMessages();
-        transaction.setStatus(Transaction.SUCCESS);
-      } catch (Throwable ex) {
-        transaction.setStatus(ex);
-        logger.error("Scan and send message failed", ex);
-      } finally {
-        transaction.complete();
-      }
-    }, databaseScanInterval, databaseScanInterval, TimeUnit.MILLISECONDS);
+    executorService.scheduleWithFixedDelay(
+            new Runnable() {
+              @Override
+              public void run() {
+                Transaction transaction = Tracer.newTransaction("Apollo.ReleaseMessageScanner", "scanMessage");
+                try {
+                  scanMessages();
+                  transaction.setStatus(Transaction.SUCCESS);
+                } catch (Throwable ex) {
+                  transaction.setStatus(ex);
+                  logger.error("Scan and send message failed", ex);
+                } finally {
+                  transaction.complete();
+                }
+              }
+            }
+    , databaseScanInterval, databaseScanInterval, TimeUnit.MILLISECONDS);
 
   }
 

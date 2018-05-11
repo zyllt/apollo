@@ -66,7 +66,7 @@ public class NamespaceLockTest {
     verify(bizConfig).isNamespaceLockSwitchOff();
     verify(namespaceService).findOne(APP, CLUSTER, NAMESPACE);
     verify(namespaceLockService).findLock(anyLong());
-    verify(namespaceLockService).tryLock(any());
+    verify(namespaceLockService).tryLock((NamespaceLock) any());
 
   }
 
@@ -110,7 +110,7 @@ public class NamespaceLockTest {
     verify(bizConfig).isNamespaceLockSwitchOff();
     verify(namespaceService).findOne(NAMESPACE_ID);
     verify(namespaceLockService).findLock(NAMESPACE_ID);
-    verify(namespaceLockService).tryLock(any());
+    verify(namespaceLockService).tryLock((NamespaceLock) any());
   }
 
   @Test(expected = ServiceException.class)
@@ -119,14 +119,14 @@ public class NamespaceLockTest {
     when(bizConfig.isNamespaceLockSwitchOff()).thenReturn(false);
     when(namespaceService.findOne(NAMESPACE_ID)).thenReturn(mockNamespace());
     when(namespaceLockService.findLock(NAMESPACE_ID)).thenReturn(null);
-    when(namespaceLockService.tryLock(any())).thenThrow(DataIntegrityViolationException.class);
+    when(namespaceLockService.tryLock((NamespaceLock) any())).thenThrow(DataIntegrityViolationException.class);
 
     namespaceLockAspect.acquireLock(NAMESPACE_ID, CURRENT_USER);
 
     verify(bizConfig).isNamespaceLockSwitchOff();
     verify(namespaceService).findOne(NAMESPACE_ID);
     verify(namespaceLockService, times(2)).findLock(NAMESPACE_ID);
-    verify(namespaceLockService).tryLock(any());
+    verify(namespaceLockService).tryLock((NamespaceLock) any());
 
   }
 

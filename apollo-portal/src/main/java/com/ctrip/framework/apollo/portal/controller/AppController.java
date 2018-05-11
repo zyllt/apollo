@@ -112,7 +112,7 @@ public class AppController {
       try {
         response.addResponseEntity(RichResponseEntity.ok(appService.createEnvNavNode(env, appId)));
       } catch (Exception e) {
-        response.addResponseEntity(RichResponseEntity.error(HttpStatus.INTERNAL_SERVER_ERROR,
+        response.addResponseEntity(RichResponseEntity.<EnvClusterInfo>error(HttpStatus.INTERNAL_SERVER_ERROR,
                                                             "load env:" + env.name() + " cluster error." + e
                                                                 .getMessage()));
       }
@@ -153,7 +153,7 @@ public class AppController {
             ((HttpClientErrorException) e).getStatusCode() == HttpStatus.NOT_FOUND) {
           response.addResponseEntity(RichResponseEntity.ok(env));
         } else {
-          response.addResponseEntity(RichResponseEntity.error(HttpStatus.INTERNAL_SERVER_ERROR,
+          response.addResponseEntity(RichResponseEntity.<Env>error(HttpStatus.INTERNAL_SERVER_ERROR,
                                                               String.format("load appId:%s from env %s error.", appId,
                                                                             env)
                                                               + e.getMessage()));

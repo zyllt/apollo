@@ -36,7 +36,7 @@ public class AppController {
 
       envCluster.setEnv(env.name());
       List<ClusterDTO> clusterDTOs = clusterService.findClusters(env, appId);
-      envCluster.setClusters(BeanUtils.toPropertySet("name", clusterDTOs));
+      envCluster.setClusters(BeanUtils.<String>toPropertySet("name", clusterDTOs));
 
       envClusters.add(envCluster);
     }

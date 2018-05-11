@@ -151,18 +151,23 @@ public class InstanceConfigAuditUtil implements InitializingBean {
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    auditExecutorService.submit(() -> {
-      while (!auditStopped.get() && !Thread.currentThread().isInterrupted()) {
-        try {
-          InstanceConfigAuditModel model = audits.poll();
-          if (model == null) {
-            TimeUnit.SECONDS.sleep(1);
-            continue;
+    auditExecutorService.submit(new Runnable() {
+      @Override
+      public void run() {
+
+        while (!auditStopped.get() && !Thread.currentThread().isInterrupted()) {
+          try {
+            InstanceConfigAuditModel model = audits.poll();
+            if (model == null) {
+              TimeUnit.SECONDS.sleep(1);
+              continue;
+            }
+            doAudit(model);
+          } catch (Throwable ex) {
+            Tracer.logError(ex);
           }
-          doAudit(model);
-        } catch (Throwable ex) {
-          Tracer.logError(ex);
         }
+
       }
     });
   }

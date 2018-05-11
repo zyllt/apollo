@@ -92,22 +92,27 @@ public abstract class AbstractBaseIntegrationTest {
     return release;
   }
 
-  protected void periodicSendMessage(ExecutorService executorService, String message, AtomicBoolean stop) {
-    executorService.submit((Runnable) () -> {
-      //wait for the request connected to server
-      while (!stop.get() && !Thread.currentThread().isInterrupted()) {
-        try {
-          TimeUnit.MILLISECONDS.sleep(100);
-        } catch (InterruptedException e) {
-        }
+  protected void periodicSendMessage(ExecutorService executorService, final String message, final AtomicBoolean stop) {
+    executorService.submit(new Runnable() {
+        @Override
+        public void run() {
 
-        //double check
-        if (stop.get()) {
-          break;
-        }
+            //wait for the request connected to server
+            while (!stop.get() && !Thread.currentThread().isInterrupted()) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } catch (InterruptedException e) {
+                }
 
-        sendReleaseMessage(message);
-      }
+                //double check
+                if (stop.get()) {
+                    break;
+                }
+
+                sendReleaseMessage(message);
+            }
+
+        }
     });
   }
 

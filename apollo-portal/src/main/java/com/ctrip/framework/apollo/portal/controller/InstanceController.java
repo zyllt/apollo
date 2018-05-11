@@ -1,5 +1,7 @@
 package com.ctrip.framework.apollo.portal.controller;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 
 import com.ctrip.framework.apollo.common.dto.InstanceDTO;
@@ -9,6 +11,9 @@ import com.ctrip.framework.apollo.core.enums.Env;
 import com.ctrip.framework.apollo.portal.entity.vo.Number;
 import com.ctrip.framework.apollo.portal.service.InstanceService;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -20,13 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 @RestController
 public class InstanceController {
 
     private static final Splitter RELEASES_SPLITTER = Splitter.on(",").omitEmptyStrings()
-        .trimResults();
+            .trimResults();
 
     @Autowired
     private InstanceService instanceService;
@@ -63,8 +68,26 @@ public class InstanceController {
                                                 @RequestParam String clusterName, @RequestParam String namespaceName,
                                                 @RequestParam String releaseIds) {
 
-        Set<Long> releaseIdSet = RELEASES_SPLITTER.splitToList(releaseIds).stream().map(Long::parseLong)
-            .collect(Collectors.toSet());
+        Set<Long> releaseIdSet =
+
+                FluentIterable.from(RELEASES_SPLITTER.splitToList(releaseIds))
+                        .transform(new Function<String, Long>() {
+                    @Override
+                    public Long apply(String s) {
+                        return Long.parseLong(s);
+                    }
+                }).toSet();
+
+//                Sets.newHashSet(
+//                        Lists.transform(RELEASES_SPLITTER.splitToList(releaseIds), new Function<String, Long>() {
+//                            @Override
+//                            public Long apply(String s) {
+//                                return Long.parseLong(s);
+//                            }
+//                        }));
+
+//                RELEASES_SPLITTER.splitToList(releaseIds).stream().map(Long::parseLong)
+//            .collect(Collectors.toSet());
 
         if (CollectionUtils.isEmpty(releaseIdSet)) {
             throw new BadRequestException("release ids can not be empty");

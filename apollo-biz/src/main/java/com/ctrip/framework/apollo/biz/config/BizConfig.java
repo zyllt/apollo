@@ -41,7 +41,7 @@ public class BizConfig extends RefreshableConfig {
 
   @Override
   protected List<RefreshablePropertySource> getRefreshablePropertySources() {
-    return Collections.singletonList(propertySource);
+    return Collections.<RefreshablePropertySource>singletonList(propertySource);
   }
 
   public List<String> eurekaServiceUrls() {

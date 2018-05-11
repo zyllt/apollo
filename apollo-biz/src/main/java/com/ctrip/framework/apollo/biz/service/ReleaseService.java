@@ -202,8 +202,8 @@ public class ReleaseService {
     //create release for child namespace
     Map<String, String> childReleaseConfiguration = getNamespaceReleaseConfiguration(childNamespace);
     Map<String, String> parentNamespaceOldConfiguration = masterPreviousRelease == null ?
-                                                          null : gson.fromJson(masterPreviousRelease.getConfigurations(),
-                                                                        GsonType.CONFIG);
+                                                          null : (Map<String, String>) gson.fromJson(masterPreviousRelease.getConfigurations(),
+            GsonType.CONFIG);
 
     Map<String, String> childNamespaceToPublishConfigs =
         calculateChildNamespaceToPublishConfiguration(parentNamespaceOldConfiguration,
@@ -223,9 +223,9 @@ public class ReleaseService {
                                          String releaseName, String releaseComment,
                                          String operator, boolean isEmergencyPublish) {
     Release parentLatestRelease = findLatestActiveRelease(parentNamespace);
-    Map<String, String> parentConfigurations = parentLatestRelease != null ?
-                                               gson.fromJson(parentLatestRelease.getConfigurations(),
-                                                             GsonType.CONFIG) : new HashMap<>();
+    Map<String, String> parentConfigurations = (Map<String, String>) (parentLatestRelease != null ?
+                                                   gson.fromJson(parentLatestRelease.getConfigurations(),
+                                                                 GsonType.CONFIG) : new HashMap<>());
     long baseReleaseId = parentLatestRelease == null ? 0 : parentLatestRelease.getId();
 
     Map<String, String> childNamespaceToPublishConfigs = mergeConfiguration(parentConfigurations, childNamespaceItems);
@@ -426,9 +426,9 @@ public class ReleaseService {
     Release childNamespaceLatestActiveRelease = findLatestActiveRelease(childNamespace);
 
     Map<String, String> childNamespaceLatestActiveConfiguration = childNamespaceLatestActiveRelease == null ? null :
-                                                                  gson.fromJson(childNamespaceLatestActiveRelease
-                                                                                    .getConfigurations(),
-                                                                                GsonType.CONFIG);
+            (Map<String, String>) gson.fromJson(childNamespaceLatestActiveRelease
+                            .getConfigurations(),
+                    GsonType.CONFIG);
 
     Map<String, String> childNamespaceModifiedConfiguration = calculateBranchModifiedItemsAccordingToRelease(
         parentNamespaceOldConfiguration, childNamespaceLatestActiveConfiguration);
