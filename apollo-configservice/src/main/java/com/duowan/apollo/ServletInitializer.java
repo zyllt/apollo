@@ -1,18 +1,19 @@
-package com.ctrip.framework.apollo.configservice;
+package com.duowan.apollo;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 
 /**
- * Entry point for traditional web app
+ * 功能：web
  *
- * @author Jason Song(song_s@ctrip.com)
+ * @author zengyuan on 2018/5/11.
+ * @see
  */
 public class ServletInitializer extends SpringBootServletInitializer {
 
   @Override
   protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-    return application.sources(ConfigServiceApplication.class);
+    return application.sources(ApolloDemo.class);
   }
 
 }
