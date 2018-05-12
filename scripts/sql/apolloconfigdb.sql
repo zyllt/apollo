@@ -8,7 +8,7 @@
 
 # Create Database
 # ------------------------------------------------------------
-CREATE DATABASE IF NOT EXISTS ApolloConfigDB DEFAULT CHARACTER SET = utf8mb4;
+CREATE DATABASE IF NOT EXISTS ApolloConfigDB DEFAULT CHARACTER SET = utf8;
 
 Use ApolloConfigDB;
 
@@ -27,14 +27,14 @@ CREATE TABLE `App` (
   `OwnerEmail` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerEmail',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `AppId` (`AppId`(191)),
   KEY `DataChange_LastTime` (`DataChange_LastTime`),
   KEY `IX_Name` (`Name`(191))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用表';
 
 
 
@@ -52,14 +52,14 @@ CREATE TABLE `AppNamespace` (
   `Comment` varchar(64) NOT NULL DEFAULT '' COMMENT '注释',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `IX_AppId` (`AppId`),
   KEY `Name_AppId` (`Name`,`AppId`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用namespace定义';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用namespace定义';
 
 
 
@@ -76,12 +76,12 @@ CREATE TABLE `Audit` (
   `Comment` varchar(500) DEFAULT NULL COMMENT '备注',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='日志审计表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志审计表';
 
 
 
@@ -97,14 +97,14 @@ CREATE TABLE `Cluster` (
   `ParentClusterId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父cluster',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT '' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `IX_AppId_Name` (`AppId`,`Name`),
   KEY `IX_ParentClusterId` (`ParentClusterId`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='集群';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='集群';
 
 
 
@@ -122,15 +122,15 @@ CREATE TABLE `Commit` (
   `Comment` varchar(500) DEFAULT NULL COMMENT '备注',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`),
   KEY `AppId` (`AppId`(191)),
   KEY `ClusterName` (`ClusterName`(191)),
   KEY `NamespaceName` (`NamespaceName`(191))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='commit 历史表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='commit 历史表';
 
 # Dump of table grayreleaserule
 # ------------------------------------------------------------
@@ -148,13 +148,13 @@ CREATE TABLE `GrayReleaseRule` (
   `BranchStatus` tinyint(2) DEFAULT '1' COMMENT '灰度分支状态: 0:删除分支,1:正在使用的规则 2：全量发布',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`),
   KEY `IX_Namespace` (`AppId`,`ClusterName`,`NamespaceName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='灰度规则表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='灰度规则表';
 
 
 # Dump of table instance
@@ -168,13 +168,13 @@ CREATE TABLE `Instance` (
   `ClusterName` varchar(32) NOT NULL DEFAULT 'default' COMMENT 'ClusterName',
   `DataCenter` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'Data Center Name',
   `Ip` varchar(32) NOT NULL DEFAULT '' COMMENT 'instance ip',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
+  `DataChange_LastTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   UNIQUE KEY `IX_UNIQUE_KEY` (`AppId`,`ClusterName`,`Ip`,`DataCenter`),
   KEY `IX_IP` (`Ip`),
   KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用配置的应用实例';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='使用配置的应用实例';
 
 
 
@@ -191,14 +191,14 @@ CREATE TABLE `InstanceConfig` (
   `ConfigNamespaceName` varchar(32) NOT NULL DEFAULT 'default' COMMENT 'Config Namespace Name',
   `ReleaseKey` varchar(64) NOT NULL DEFAULT '' COMMENT '发布的Key',
   `ReleaseDeliveryTime` timestamp NULL DEFAULT NULL COMMENT '配置获取时间',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
+  `DataChange_LastTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   UNIQUE KEY `IX_UNIQUE_KEY` (`InstanceId`,`ConfigAppId`,`ConfigNamespaceName`),
   KEY `IX_ReleaseKey` (`ReleaseKey`),
   KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
   KEY `IX_Valid_Namespace` (`ConfigAppId`,`ConfigClusterName`,`ConfigNamespaceName`,`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用实例的配置信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用实例的配置信息';
 
 
 
@@ -216,13 +216,13 @@ CREATE TABLE `Item` (
   `LineNum` int(10) unsigned DEFAULT '0' COMMENT '行号',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `IX_GroupId` (`NamespaceId`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置项目';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置项目';
 
 
 
@@ -238,14 +238,14 @@ CREATE TABLE `Namespace` (
   `NamespaceName` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'Namespace Name',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `AppId_ClusterName_NamespaceName` (`AppId`(191),`ClusterName`(191),`NamespaceName`(191)),
   KEY `DataChange_LastTime` (`DataChange_LastTime`),
   KEY `IX_NamespaceName` (`NamespaceName`(191))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='命名空间';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='命名空间';
 
 
 
@@ -258,14 +258,14 @@ CREATE TABLE `NamespaceLock` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `NamespaceId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '集群NamespaceId',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT 'default' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   `IsDeleted` bit(1) DEFAULT b'0' COMMENT '软删除',
   PRIMARY KEY (`Id`),
   UNIQUE KEY `IX_NamespaceId` (`NamespaceId`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='namespace的编辑锁';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='namespace的编辑锁';
 
 
 
@@ -286,14 +286,14 @@ CREATE TABLE `Release` (
   `IsAbandoned` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否废弃',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `AppId_ClusterName_GroupName` (`AppId`(191),`ClusterName`(191),`NamespaceName`(191)),
   KEY `DataChange_LastTime` (`DataChange_LastTime`),
   KEY `IX_ReleaseKey` (`ReleaseKey`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发布';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发布';
 
 
 # Dump of table releasehistory
@@ -313,14 +313,14 @@ CREATE TABLE `ReleaseHistory` (
   `OperationContext` longtext NOT NULL COMMENT '发布上下文信息',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `IX_Namespace` (`AppId`,`ClusterName`,`NamespaceName`,`BranchName`),
   KEY `IX_ReleaseId` (`ReleaseId`),
   KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发布历史';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发布历史';
 
 
 # Dump of table releasemessage
@@ -331,11 +331,11 @@ DROP TABLE IF EXISTS `ReleaseMessage`;
 CREATE TABLE `ReleaseMessage` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `Message` varchar(1024) NOT NULL DEFAULT '' COMMENT '发布的消息内容',
-  `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`),
   KEY `IX_Message` (`Message`(191))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发布消息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发布消息';
 
 
 
@@ -352,13 +352,13 @@ CREATE TABLE `ServerConfig` (
   `Comment` varchar(1024) DEFAULT '' COMMENT '注释',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
   `DataChange_CreatedBy` varchar(32) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '创建时间',
   `DataChange_LastModifiedBy` varchar(32) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `DataChange_LastTime` timestamp NULL DEFAULT '2000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
   PRIMARY KEY (`Id`),
   KEY `IX_Key` (`Key`),
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置服务自身配置';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置服务自身配置';
 
 # Config
 # ------------------------------------------------------------
