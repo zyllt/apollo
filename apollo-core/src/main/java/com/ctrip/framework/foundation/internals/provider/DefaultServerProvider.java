@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
+import com.ctrip.framework.apollo.core.utils.DuoWanEnvUtil;
 import com.ctrip.framework.foundation.internals.Utils;
 import com.ctrip.framework.foundation.internals.io.BOMInputStream;
 import com.ctrip.framework.foundation.spi.provider.Provider;
@@ -102,6 +103,14 @@ public class DefaultServerProvider implements ServerProvider {
   }
 
   private void initEnvType() {
+    //1.兼容duowanenv
+    m_env = DuoWanEnvUtil.getDuowanEnv();
+    if (!Utils.isBlank(m_env)) {
+      m_env = m_env.trim();
+      logger.info("Environment is set to [{}] by duowan system property 'DWENV'.", m_env);
+      return;
+    }
+
     // 1. Try to get environment from JVM system property
     m_env = System.getProperty("env");
     if (!Utils.isBlank(m_env)) {

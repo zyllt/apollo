@@ -1,6 +1,6 @@
 package com.ctrip.framework.apollo.common.yy.cloudmysql;
 
-import com.ctrip.framework.apollo.common.yy.EnvUtil;
+import com.ctrip.framework.apollo.core.utils.DuoWanEnvUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.context.EnvironmentAware;
@@ -21,7 +21,7 @@ public class CloudMysqlConf implements EnvironmentAware {
     private Environment environment;
 
     public JdbcUrlInfo getCloudMysqlUrl() {
-        String key = CLOUDMYSQL_ID_PREFIX + EnvUtil.getDuowanEnv();
+        String key = CLOUDMYSQL_ID_PREFIX + DuoWanEnvUtil.getDuowanEnv();
         String name = environment.getProperty(key);
         String database = getDatabase();
 

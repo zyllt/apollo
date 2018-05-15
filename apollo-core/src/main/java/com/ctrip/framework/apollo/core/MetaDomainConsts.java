@@ -27,6 +27,10 @@ public class MetaDomainConsts {
         env.getProperty("local_meta", prop.getProperty("local.meta", DEFAULT_META_URL)));
     domains.put(Env.DEV,
         env.getProperty("dev_meta", prop.getProperty("dev.meta", DEFAULT_META_URL)));
+    domains.put(Env.TEST,
+            env.getProperty("test_meta", prop.getProperty("test.meta", DEFAULT_META_URL)));
+    domains.put(Env.PROD,
+            env.getProperty("prod_meta", prop.getProperty("prod.meta", DEFAULT_META_URL)));
     domains.put(Env.FAT,
         env.getProperty("fat_meta", prop.getProperty("fat.meta", DEFAULT_META_URL)));
     domains.put(Env.UAT,
