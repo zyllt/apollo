@@ -585,6 +585,29 @@
 				</plugins>
 			</build>
 		</profile>
+		<!--yy环境定制-->
+		<profile>
+			<id>yy</id>
+			<properties>
+				<package.environment>yy</package.environment>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<!--<profile>-->
+			<!--<id>yy-test</id>-->
+			<!--<properties>-->
+				<!--<package.environment>yy</package.environment>-->
+			<!--</properties>-->
+		<!--</profile>-->
+		<!--<profile>-->
+			<!--<id>yy-prod</id>-->
+			<!--<properties>-->
+				<!--<package.environment>yy</package.environment>-->
+			<!--</properties>-->
+		<!--</profile>-->
+
 		<profile>
 			<!-- for open source usage -->
 			<id>github</id>
@@ -592,7 +615,7 @@
 				<package.environment>github</package.environment>
 			</properties>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 		</profile>
 		<profile>

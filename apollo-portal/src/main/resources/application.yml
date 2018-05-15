@@ -7,10 +7,10 @@ spring:
     cache-period: 3600
 
 server:
-  port: 8080
+  port: 8081
   
 logging:
-  file: /data/logs/apollo/100003173/apollo-portal.log
+  file: /data2/log/apollo/100003173/apollo-portal.log
 
 endpoints:
   health:
@@ -21,5 +21,4 @@ management:
   health:
     status:
       order: DOWN, OUT_OF_SERVICE, UNKNOWN, UP 
-
 
